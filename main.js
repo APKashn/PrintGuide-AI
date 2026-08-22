@@ -25,7 +25,7 @@ const Ready = document.getElementById("Ready");
 const Helpdiv = document.querySelector(".how-it-works-container")
 function initScene() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000023);
+    scene.background = new THREE.Color(0x000010);
 
     camera = new THREE.PerspectiveCamera(
         45,
@@ -126,7 +126,7 @@ function handleFileSelect(e) {
         geometry.center();
 
         const material = new THREE.MeshStandardMaterial({
-            color: 0x90caf9,
+            color: 0x808080,
             roughness: 0.4,
             metalness: 0.2
         });
