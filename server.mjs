@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "Public")));
 
 app.get('/favicon.png', (req, res) => res.status(204).end());
 app.get('/favicon.ico', (req, res) => res.status(204).end());
@@ -167,7 +167,7 @@ async function executeGroqCompletion(apiKey, modelName, promptText, imageBase64)
 
 // Catch-all route to serve SPA
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "Public", "index.html"));
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
