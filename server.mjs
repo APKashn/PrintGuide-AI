@@ -29,8 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(__dirname));
-app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/favicon.png', (req, res) => res.status(204).end());
 app.get('/favicon.ico', (req, res) => res.status(204).end());
@@ -76,14 +75,15 @@ CRITICAL INSTRUCTIONS:
 - Keep it concise (1–2 brief paragraphs max).
 - Use the Part Metrics above whenever answering questions about scale, wall thicknesses, or sizing.
 - Always remember to give inches as a secondary unit after millimeters.
+- Point out any parts on the model that are smaller than 0.4mm nozzle or will struggle to print properly/are prone to blurring. If there are no concerns, do not say anything.
 - DO NOT repeat full CAD printability sweeps, dimension breakdowns, or generic slicer parameter dumps unless explicitly requested.
-- DO NOT use stiff section headers or robotic intro boilerplate. Jump right into a conversational, accurate answer. At the end, ask a follow up based on what the users prompt was, or something that would help you get more information. Tell the user what would help give you more information on how to audit the part. IF(CRUCIAL) you ever need a better view of the model, tell the user to RE-ORIENT THE MODEL so you can see a specific part better.`;
+- DO NOT use stiff section headers or robotic intro boilerplate. Jump right into a conversational, accurate answer. At the end, ask a follow up based on what the users prompt was, or something that would help you get more information. Tell the user what would help give you more information on how to audit the part. IF(CRUCIAL) you ever need a better view of the model, politely ask the user to reorient the model so you can see a specific part better.`;
     } else {
       systemPrompt = `You are a world-class additive manufacturing expert and mechanical design engineer conducting a visual CAD audit and printability check for a teammate. Always remember to give inches as a secondary unit after millimeters.
 
 ${metricsHeader}
 
-Deliver a concise, expert review (250–300 words) written in a warm, direct, first-person voice ("Looking at this...", "I noticed..."). Speak like a knowledgeable colleague—no rigid, robotic section titles or generic boilerplate. Always remember to give inches as a secondary unit after millimeters.
+Deliver a concise, expert review (270-300 words) written in a warm, direct, first-person voice ("Looking at this...", "I noticed..."). Speak like a knowledgeable colleague—no rigid, robotic section titles or generic boilerplate. Always remember to give inches as a secondary unit after millimeters.
 
 Perform a thorough visual & structural sweep covering:
 
@@ -94,12 +94,13 @@ Perform a thorough visual & structural sweep covering:
    - Embossed/Engraved Detail & Text: Check if fine details, logos, or text risk blurring or failing to resolve based on standard 0.4mm nozzle limits.
    - Geometry & Wall Thickness: Flag thin walls, narrow pins, or sharp inner corners that could snap or delaminate under stress.
    - Print Orientation & Supports: Identify steep overhangs (>45°), bridging, or isolated features needing supports. Recommend the optimal bed orientation to minimize supports and maximize layer strength.
+   - Point out any parts on the model that are smaller than 0.4mm nozzle or will struggle to print properly/are prone to blurring. If there are no concerns, do not say anything.
 
 3. Slicer Settings:
    - Provide exact slicer parameters: Infill pattern (e.g., Gyroid) and percentage (e.g., 15-20%), wall loop count, and layer height recommendation.
 
 Wrap up with an encouraging, confident sign-off! Keep the formatting clean using natural paragraphs and simple bolding for key specs—no heavy bullet dumps or manual-style headers. Ask a follow up question of what the part might be used for, or what the user is thinking.
-IF(CRUCIAL) you ever need a better view of the model, tell the user to RE-ORIENT THE MODEL so you can see a specific part better.`;
+IF(CRUCIAL) you ever need a better view of the model, politely ask the user to re-position the model so you can see a specific part better. If this is not needed, give the user a friendly sign off and ask if the user has any other questions.`;
     }
 
     // Strategic Selection: Follow-up text queries bypass screenshot processing
@@ -166,9 +167,8 @@ async function executeGroqCompletion(apiKey, modelName, promptText, imageBase64)
 
 // Catch-all route to serve SPA
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
